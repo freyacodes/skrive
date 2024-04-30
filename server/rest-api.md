@@ -1,9 +1,9 @@
-# Skrive REST API
+# Skrive REST API v1.0
 
 This document describes the Skrive REST API. The API follows these conventions:
 
-* Unless stated otherwise, successful responses will respond with `200 OK`.
-* If a response contains a body, the header `Content-Type: application/json` will follow.
+* Unless stated otherwise, successful responses will have the status `200 OK`.
+* If a response contains a body, it will have the header `Content-Type: application/json`.
 * Currently, all endpoints require authentication.
 
 ## Authentication
@@ -11,6 +11,16 @@ This document describes the Skrive REST API. The API follows these conventions:
 Authentication is currently only possible by providing the server's password in the `Authorization` header. The password should be prefixed with `Password `. If your password is `FOOBAR`, then your Authorization header should be `Password FOOBAR`.
 
 ## Dose entity
+
+| Field       | Description                                                  |
+| ----------- | ------------------------------------------------------------ |
+| `Id`        | A randomly generated ID. If this is provided as `null` to the server, an ID will be generated. Uniqueness is currently not guaranteed in the log. |
+| `Time`      | The time at which the dose was administered, expressed as seconds since the Unix epoch. |
+| `Quantity`  | A user-provided string. This field is meant to describe the amount administered, typically a number and a unit. |
+| `Substance` | A user-provided string. This field is meant to describe the specific chemical substance administered. |
+| `Route`     | A user-provided string. This field is meant to describe the route of administration, e.g. Oral or Sublingual. |
+
+#### Example
 
 ```json
 {
@@ -22,7 +32,6 @@ Authentication is currently only possible by providing the server's password in 
 }
 ```
 
-`Id` is a globally unique ID. If `null` is provided to the server, then an ID will be generated. `Time` is Unix epoch in seconds. `Quantity`, `Substance`, and `Route` are all user-provided strings that are stored and displayed as-is.
 
 
 ## Requests
