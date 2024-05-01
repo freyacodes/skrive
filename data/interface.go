@@ -25,7 +25,7 @@ type JsonDose struct {
 type Storage interface {
 	FetchAll() ([]Dose, error)
 	Append(*Dose) error
-	DeleteDose(Id) error
+	DeleteDose(Id) (bool, error)
 }
 
 var ApplicationStorage Storage

@@ -40,7 +40,7 @@ func remove(id data.Id, doses []data.Dose) tea.Cmd {
 			}
 		}
 
-		if data.ApplicationStorage.DeleteDose(id) == nil {
+		if _, err := data.ApplicationStorage.DeleteDose(id); err == nil {
 			return removeMsg{
 				doses: newDoses,
 			}

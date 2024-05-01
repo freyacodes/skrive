@@ -79,7 +79,14 @@ func deleteDose(w http.ResponseWriter, req *http.Request) {
 	if !handleAuthentication(w, req) {
 		return
 	}
-	w.Write([]byte(req.PathValue("id")))
+
+	id := req.PathValue("id")
+	deleted, err := data.ApplicationStorage.DeleteDose(data.Id(id))
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+	} else if !deleted {
+		http.Error(w, "Dose "+id+" not found", 404)
+	}
 }
 
 func handleAuthentication(w http.ResponseWriter, req *http.Request) bool {
