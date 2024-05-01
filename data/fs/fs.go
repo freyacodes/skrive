@@ -38,7 +38,7 @@ func (e homePathError) Error() string {
 	return "Could not find home directory"
 }
 
-func (storage FsStorage) Append(dose data.Dose) error {
+func (storage FsStorage) Append(dose *data.Dose) error {
 	if err := storage.probeAndMigrate(); err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func (storage FsStorage) Append(dose data.Dose) error {
 		return err
 	}
 
-	if _, err := file.WriteString(encode(dose) + "\n"); err != nil {
+	if _, err := file.WriteString(encode(*dose) + "\n"); err != nil {
 		return err
 	}
 

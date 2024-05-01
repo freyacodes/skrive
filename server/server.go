@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"io"
 	"log"
 	"net/http"
 	"skrive/data"
@@ -47,7 +48,31 @@ func appendDose(w http.ResponseWriter, req *http.Request) {
 	if !handleAuthentication(w, req) {
 		return
 	}
-	w.Write([]byte("Hello, world!"))
+
+	var payload, err = io.ReadAll(req.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+	}
+
+	var newDoseJson data.JsonDose
+	err = json.Unmarshal(payload, &newDoseJson)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+	}
+	nd := newDoseJson.ToDose()
+	newDose := &nd
+
+	err = data.ApplicationStorage.Append(newDose)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+	}
+
+	var response []byte
+	response, err = json.Marshal(newDose.ToJsonDose())
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+	}
+	w.Write(response)
 }
 
 func deleteDose(w http.ResponseWriter, req *http.Request) {
