@@ -12,6 +12,7 @@ var subcommand *string
 var parser = argparse.NewParser("skrive", "Log doses via the terminal")
 var fileArg = parser.String("f", "file", &argparse.Options{Required: false, Help: "Set the doses file path"})
 var helpFlag = parser.Flag("h", "help", &argparse.Options{Help: "Print help information"})
+var serveArg = parser.String("s", "serve", &argparse.Options{Help: "Run as a server for remote access"})
 var positionalArguments = []string{}
 
 func parse() error {
