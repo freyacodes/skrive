@@ -3,12 +3,16 @@
 This document describes the Skrive REST API. The API follows these conventions:
 
 * Unless stated otherwise, successful responses will have the status `200 OK`.
-* If a response contains a body, it will have the header `Content-Type: application/json`.
+* If a successful response contains a body, it will have the header `Content-Type: application/json`.
 * Currently, all endpoints require authentication.
 
 ## Authentication
 
 Authentication is currently only possible by providing the server's password in the `Authorization` header. The password should be prefixed with `Password `. If your password is `FOOBAR`, then your Authorization header should be `Password FOOBAR`.
+
+## Error handling
+
+Upon any unsuccessful response (status codes 400 to 599), the error message will be presented as a plain text body without JSON.
 
 ## Dose entity
 
