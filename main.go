@@ -7,6 +7,7 @@ import (
 	"skrive/data"
 	"skrive/data/fs"
 	"skrive/log"
+	"skrive/server"
 	"skrive/startMenu"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -34,6 +35,12 @@ func main() {
 
 	if subcommand != nil {
 		handleSubcommands()
+		os.Exit(0)
+	}
+
+	if len(*serveArg) > 0 {
+		server.Serve(*serveArg)
+		return
 	}
 
 	var model tea.Model
@@ -68,7 +75,6 @@ func handleSubcommands() {
 		}
 		exitIfError(log.Invoke(positionalArguments))
 	}
-	os.Exit(0)
 }
 
 func exitIfError(err error) {

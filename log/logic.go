@@ -25,7 +25,7 @@ func log(quantity string, substance string, route string, offset int) tea.Cmd {
 			Route:     route,
 		}
 
-		err := data.ApplicationStorage.Append(dose)
+		err := data.ApplicationStorage.Append(&dose)
 
 		return logMsg{
 			success: err == nil,

@@ -38,7 +38,7 @@ func (e homePathError) Error() string {
 	return "Could not find home directory"
 }
 
-func (storage FsStorage) Append(dose data.Dose) error {
+func (storage FsStorage) Append(dose *data.Dose) error {
 	if err := storage.probeAndMigrate(); err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func (storage FsStorage) Append(dose data.Dose) error {
 		return err
 	}
 
-	if _, err := file.WriteString(encode(dose) + "\n"); err != nil {
+	if _, err := file.WriteString(encode(*dose) + "\n"); err != nil {
 		return err
 	}
 
@@ -123,22 +123,25 @@ func (storage FsStorage) overwrite(doses []data.Dose) error {
 	return err
 }
 
-func (storage FsStorage) DeleteDose(id data.Id) error {
+func (storage FsStorage) DeleteDose(id data.Id) (bool, error) {
 	original, err := storage.FetchAll()
 
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	result := make([]data.Dose, 0)
+	deleted := false
 
 	for _, dose := range original {
 		if dose.Id != id {
 			result = append(result, dose)
+		} else {
+			deleted = true
 		}
 	}
 
-	return storage.overwrite(result)
+	return deleted, storage.overwrite(result)
 }
 
 func (storage FsStorage) probeAndMigrate() error {

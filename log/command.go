@@ -30,7 +30,7 @@ func Invoke(arguments []string) error {
 		offsetDescription = fmt.Sprintf(" %d minutes ago", value)
 	}
 
-	dose := data.Dose{
+	dose := &data.Dose{
 		Time:      time,
 		Quantity:  arguments[0],
 		Substance: arguments[1],

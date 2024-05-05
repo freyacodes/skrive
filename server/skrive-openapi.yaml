@@ -1,0 +1,108 @@
+openapi: '3.0.2'
+info:
+  title: Skrive API
+  version: '1.0'
+
+components:
+  securitySchemes:
+    PasswordAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+
+  schemas:
+    Dose:
+      type: object
+      properties:
+        Id:
+          type: string
+          example: V3knt5xrdXagezE0mUJNU
+        Time:
+          type: integer
+          example: 1714504074
+        Quantity:
+          type: string
+          example: "1,5 mg"
+        Substance:
+          type: string
+          example: Estradiol
+        Route:
+          type: string
+          example: Transdermal
+      # Both properties are required
+      required:  
+        - Time
+        - Quantity
+        - Substance
+        - Route
+        
+    Error403:
+      type: string
+      description: "Unauthorized"
+    Error500:
+      type: string
+      description: "Server error"
+      example: "Test"
+        
+security:
+  - PasswordAuth: []
+
+paths:
+  /v1/doses:
+    get:
+      description: "Get all doses"
+      responses:
+        '200':
+          description: A JSON array of doses
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: "#/components/schemas/Dose"
+        '403':
+          $ref: "#/components/schemas/Error403"
+        '500':
+          $ref: "#/components/schemas/Error500"
+        
+  /v1/doses/append:
+    post:
+      description: "Add a new dose"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Dose"
+            example: >
+              {
+                "Time": 1714504074,
+                "Quantity": "1,5 mg",
+                "Substance": "Estradiol",
+                "Route": "Transdermal"
+              }
+      responses:
+        '200':
+          description: "Created"
+        '403':
+          $ref: "#/components/schemas/Error403"
+        '500':
+          $ref: "#/components/schemas/Error500"
+  /v1/doses/{id}:
+    delete:
+      description: "Delete a specific dose"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: "Deleted"
+        '403':
+          $ref: "#/components/schemas/Error403"
+        '404':
+          description: "No dose matching the given ID"
+        '500':
+          $ref: "#/components/schemas/Error500"
+          
